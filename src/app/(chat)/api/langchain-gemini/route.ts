@@ -25,8 +25,8 @@ import {
 // Define the function that calls the model
 const callModel = async (state: typeof MessagesAnnotation.State) => {
  const prompts = await promptTemplate.invoke(state);
-  const NextResponse = await llm.invoke(prompts);
-  return { messages: NextResponse };
+  const response = await llm.invoke(prompts);
+  return { messages: response };
 };
 import { v4 as uuidv4 } from "uuid";
 
