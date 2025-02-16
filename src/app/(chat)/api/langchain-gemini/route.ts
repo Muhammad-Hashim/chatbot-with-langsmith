@@ -1,5 +1,6 @@
 import { ChatGroq } from "@langchain/groq";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { NextRequest, NextResponse } from "next/server";
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 process.env.LANGSMITH_TRACING 
 process.env.LANGSMITH_API_KEY 
@@ -24,8 +25,8 @@ import {
 // Define the function that calls the model
 const callModel = async (state: typeof MessagesAnnotation.State) => {
  const prompts = await promptTemplate.invoke(state);
-  const response = await llm.invoke(prompts);
-  return { messages: response };
+  const NextResponse = await llm.invoke(prompts);
+  return { messages: NextResponse };
 };
 import { v4 as uuidv4 } from "uuid";
 
@@ -48,7 +49,7 @@ export async function POST(req: {
     const { question ,documentText} = await req.json();
     console.log(documentText);
     if (!question) {
-      return Response.json({ error: "Question is required" }, { status: 400 });
+      return NextResponse.json({ error: "Question is required" }, { status: 400 });
     }
 
     const input = [
@@ -77,11 +78,11 @@ export async function POST(req: {
     ];
     const output3 = await app.invoke({ messages: input3 }, config2);
     console.log(output3.messages[output3.messages.length - 1]);
-    return Response.json({
+    return NextResponse.json({
       answer: output3.messages[output3.messages.length - 1].content,
     });
   } catch (error) {
     console.error("Error:", error);
-    return Response.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
